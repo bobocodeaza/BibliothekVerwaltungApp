@@ -50,4 +50,53 @@ public class Bibliothek {
         }
         return teuerstes;
     }
+
+    public List<Buch> getBuecherMitMindestseiten(int mindestseiten) {
+        List<Buch> ergebnis = new ArrayList<>();
+        for (Buch b : this.buecher) {
+            if (b.getAnzahlSeiten() >= mindestseiten) {
+                ergebnis.add(b);
+            }
+        }
+        return ergebnis;
+    }
+
+    public List<Buch> getZweiBuecherInnerhalbBudgets(double budget) {
+        Buch bestBuch1 = null;
+        Buch bestBuch2 = null;
+        double maxPreisGefunden = -1;
+        int maxSeitenGefunden = -1;
+
+        for (int i = 0; i < this.buecher.size() - 1; i++) {
+            for (int j = i + 1; j < this.buecher.size(); j++) {
+                Buch b1 = this.buecher.get(i);
+                Buch b2 = this.buecher.get(j);
+                double summePreis = b1.getPreis() + b2.getPreis();
+
+                if (summePreis <= budget) {
+                    if (summePreis > maxPreisGefunden) {
+                        maxPreisGefunden = summePreis;
+                        maxSeitenGefunden = b1.getAnzahlSeiten() + b2.getAnzahlSeiten();
+                        bestBuch1 = b1;
+                        bestBuch2 = b2;
+                    }
+                    else if (summePreis == maxPreisGefunden) {
+                        int summeSeiten = b1.getAnzahlSeiten() + b2.getAnzahlSeiten();
+                        if (summeSeiten > maxSeitenGefunden) {
+                            maxSeitenGefunden = summeSeiten;
+                            bestBuch1 = b1;
+                            bestBuch2 = b2;
+                        }
+                    }
+                }
+            }
+        }
+
+        List<Buch> ergebnis = new ArrayList<>();
+        if (bestBuch1 != null && bestBuch2 != null) {
+            ergebnis.add(bestBuch1);
+            ergebnis.add(bestBuch2);
+        }
+        return ergebnis;
+    }
 }
